@@ -110,7 +110,7 @@ class DeviceController:
                 and self._target_session is session and self.hub.session is session
                 and self.lock.locked() and not self.closed.is_set() and not self.hub.stopped
                 and not session.closed.is_set() and self.hub._active_media_channel == 2
-                and (session.channel, session.stream, session.mode) == (17, 1, 2)
+                and (session.channel, session.stream, session.mode) == (18, 1, 2)
                 and session.info.uid == self.entry.unique_id and self.target_enabled(target)
                 and self._target_configuration == tuple(
                     self.entry.data.get(key) for key in _TARGET_CONFIGURATION_KEYS))

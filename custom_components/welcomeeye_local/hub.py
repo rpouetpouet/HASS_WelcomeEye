@@ -401,10 +401,10 @@ class WelcomeEyeHub:
             'ring_sequence': self.ring_count,
         })
         # reportAlarm retains its raw selector. Neither the logical second
-        # selector nor LT wire 17 may be photographed through main wire 16.
+        # selector nor LT wire 18 may be photographed through main wire 16.
         # This guard does not assert their physical panel mapping.
         if (self.entry.data.get('second_channel_enabled') is True
-                and type(message.channel) is int and message.channel in (2, 17)):
+                and type(message.channel) is int and message.channel in (2, 3, 18)):
             self.ring_image.reject_unsupported_channel(self.ring_count)
         else:
             self.ring_image.request(self.ring_count, message)
@@ -785,7 +785,7 @@ class WelcomeEyeHub:
         # stream 1, mode 2. Once a V1 is identified, do not churn
         # through speculative channel/mode variants.
         if getattr(self, '_active_media_channel', 1) == 2:
-            return [('lt_second_panel', 17, 1, 2)]
+            return [('lt_second_panel', 18, 1, 2)]
         if self.variant == DeviceVariant.V1 or self.entry.data.get('legacy_unprotected_approval'):
             return [('lt_apk_v1', 16, 1, 2)]
         profiles = list(_MEDIA_PROFILES)
@@ -793,7 +793,7 @@ class WelcomeEyeHub:
         configured = ('configured', configured_channel, 1, 2)
         if configured_channel not in {item[1] for item in profiles}:
             profiles.insert(0, configured)
-        if self.selected_media_profile and self.selected_media_profile.get('channel') != 17:
+        if self.selected_media_profile and self.selected_media_profile.get('channel') != 18:
             selected = tuple(
                 self.selected_media_profile[key]
                 for key in ('name', 'channel', 'stream', 'mode')
@@ -997,7 +997,7 @@ class WelcomeEyeHub:
                 start_av_sent = False
                 live_read_deadline = None
                 session_started = time.monotonic()
-                apk_lt_profile = channel in (16, 17) and (stream, mode) == (1, 2)
+                apk_lt_profile = channel in (16, 18) and (stream, mode) == (1, 2)
                 session = Session(
                     self.entry.data['host'],
                     self.entry.data['username'],

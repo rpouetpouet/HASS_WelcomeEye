@@ -20,7 +20,7 @@ def profile_binding(data):
     except (KeyError, TypeError, ValueError):
         return None
     profile = {'host': host, 'protocol': 'legacy_owsp',
-        'main_channel': data.get('channel', 16), 'secondary_channel': 17,
+        'main_channel': data.get('channel', 16), 'secondary_channel': 18,
         'stream': 1, 'mode': 2}
     return sha256(json.dumps(profile, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
@@ -55,10 +55,10 @@ def secondary_microphone_context(parent, session):
         and not parent.stopped and not secondary._closing
         and parent._active_media_channel == 2 and parent._media_connected
         and parent.session is session and not session.closed.is_set()
-        and session.channel == 17 and secondary._leases
+        and session.channel == 18 and secondary._leases
         and all(lease in parent.consumers for lease in tuple(secondary._leases.values()))
         and not parent.stop_event.is_set()
-        and parent.current_profile == {'name': 'lt_second_panel', 'channel': 17,
+        and parent.current_profile == {'name': 'lt_second_panel', 'channel': 18,
                                        'stream': 1, 'mode': 2}
         and secondary.observation['decoded_video_frames'] > 0
         and secondary.observation['selected_channel'] == 2
@@ -86,8 +86,8 @@ class _SecondaryTalkback:
     def diagnostics(self):
         if self.parent.talkback.diagnostics['requested_channel'] == 2:
             return self.parent.talkback.diagnostics
-        return {'state': 'off', 'requested_channel': 2, 'wire_video_channel': 17,
-            'wire_audio_channel': 18, 'route_experimental': True,
+        return {'state': 'off', 'requested_channel': 2, 'wire_video_channel': 18,
+            'wire_audio_channel': 19, 'route_experimental': True,
             'physically_verified': False, 'frames_sent': 0, 'bytes_sent': 0}
 
     async def start(self, owner):
@@ -111,7 +111,7 @@ class LegacyChannel2:
         from .legacy_snapshot import LegacySnapshotCapture
         self.manual_snapshot = LegacySnapshotCapture(self)
         self._close_task = None
-        self.observation = {'requested_channel': 2, 'wire_channel': 17,
+        self.observation = {'requested_channel': 2, 'wire_channel': 18,
             'selected_channel': None, 'physical_channel_verified': False,
             'decoded_video_frames': 0, 'decoded_audio_frames': 0,
             'last_error_type': None, 'close_reason': None}
